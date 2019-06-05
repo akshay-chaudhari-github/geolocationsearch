@@ -35,7 +35,7 @@ public class SearchLocationController {
 	 *         SearchLocationDto which contains null;
 	 */
 	@GetMapping("/search")
-	public SearchLocationDto searchPlaces(@RequestParam(name = "query", required = false) String query,
+	public SearchLocationDto searchPlaces(@RequestParam(name = "query", required = true) String query,
 			@RequestParam(name = "category", required = false) String category) {
 		try {
 			return new SearchLocationDto(
