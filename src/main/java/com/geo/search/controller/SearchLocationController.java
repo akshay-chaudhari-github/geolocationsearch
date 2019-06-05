@@ -12,24 +12,37 @@ import com.geo.search.service.SearchLocationService;
 import com.geo.search.service.dto.SearchLocationDto;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/api")
 public class SearchLocationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SearchLocationController.class);
 
-	private  SearchLocationService searchLocationService;
+	private SearchLocationService searchLocationService;
 
 	public SearchLocationController(SearchLocationService searchLocationService) {
 		this.searchLocationService = searchLocationService;
 	}
 
-	@GetMapping("/foursquare/{near}")
-	public SearchLocationDto getFourSqaureResponse(@PathVariable String near,
-			@RequestParam(name = "category", required = false) String category) { 
+	/**
+	 * End point to get all the information for the query and then return 
+	 * only the information related to the category  
+	 * 
+	 * @param query
+	 * @param category
+	 * @return 
+	 * 			SearchLocationDto which contains List<Foursquare> results 
+	 * 		else
+	 *         SearchLocationDto which contains null;
+	 */
+	@GetMapping("/search")
+	public SearchLocationDto searchPlaces(@RequestParam(name = "query", required = false) String query,
+			@RequestParam(name = "category", required = false) String category) {
 		try {
-			return new SearchLocationDto(new Object[]{searchLocationService.getLocationDetailsByCategory(near,category)});
+			return new SearchLocationDto(
+					new Object[] { searchLocationService.getLocationDetailsByCategory(query, category) });
 		} catch (Exception e) {
-			return new SearchLocationDto("", e.getMessage(), "", false, new Object[] {null});
+			logger.debug("Exception ::" + e.getMessage());
+			return new SearchLocationDto("", e.getMessage(), "", false, new Object[] { null });
 		}
 	}
 }

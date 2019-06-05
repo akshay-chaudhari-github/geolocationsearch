@@ -1,64 +1,28 @@
 # geolocationsearch
-Overview
-The script queries the official Foursquare API (with a user-provided client_id and client_secret from a Foursquare application)searches by category and returns the detailed information for that category.
 
-API :
-	 /api/search/foursquare/{near}?category={category}
+	Project to use Foursquare Places API and get the results for the category in one go.
 
-INPUTS :
-	near - Can be a city  with state e.g  Pune,Maharashtra or can be only city  or state ,
-	category - Historic Site
+# REST API :
+	 http://localhost:8080/api/search?query=Pune,Maharashtra&category=Historic Site
+	
+# References :
+	 https://developer.foursquare.com/places-api
+	 https://developer.foursquare.com/docs
+	 
+# Foursquare API Used :
+     https://api.foursquare.com/v2/venues/search 
 
-OUTPUT :
+#Technology :
+	Spring Boot 2.1.5 https://spring.io/projects/spring-boot.
+	Spring Boot Reference Guide https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/reference/htmlsingle/
+	
+# Build The Project:
+ 	mvnw clean package
+ 	
+# Run
+	mvn spring-boot:run  OR 
+	java -jar target/Locations-0.0.1-SNAPSHOT.war 
 
-e.g
-{
-    "errorCode": null,
-    "errorMessage": null,
-    "debugMessage": null,
-    "status": true,
-    "data": [
-        [
-            {
-                "name": "Shaniwar Wada",
-                "city": "Pune",
-                "state": "Mahārāshtra",
-                "country": "India",
-                "address": "Shaniwar Peth",
-                "formattedAddress": "Shaniwar Peth (Bajirao Road), Pune 411030, Mahārāshtra, India.",
-                "postalCode": "411030",
-                "category": "Historic Site"
-            },
-            {
-                "name": "Lal Mahal",
-                "city": "Pune",
-                "state": "Mahārāshtra",
-                "country": "India",
-                "address": "Corner of Kasba Ganpati Mandir,",
-                "formattedAddress": "Corner of Kasba Ganpati Mandir, (off Shivaji Road,), Pune 411030, Mahārāshtra, India.",
-                "postalCode": "411030",
-                "category": "Historic Site"
-            },
-            {
-                "name": "Dakshinmukhi Maruti",
-                "city": "",
-                "state": "",
-                "country": "India",
-                "address": "",
-                "formattedAddress": "India.",
-                "postalCode": "",
-                "category": "Historic Site"
-            }
-        ]
-    ]
-}
-
-Usage
-
-Foursquare venue search with near API returns all the places with categories, by using this API we can get data for the particular category.
-
-
-The Foursquare API has a daily rate limit of 1,000 requests/day for free accounts, but with verification, the rate limit upgrades to 100,000/day. You can test the script with a small bounding box/low grid size to see if it fits your needs before upgrading.
-
-
-
+# Testing
+	 mvnw clean test 
+	
