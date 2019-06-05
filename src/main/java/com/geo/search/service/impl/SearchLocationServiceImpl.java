@@ -10,6 +10,10 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.geo.search.model.Foursquare;
@@ -18,17 +22,19 @@ import com.geo.search.service.SearchLocationService;
 @Service
 public class SearchLocationServiceImpl implements SearchLocationService{
 
+	private static final Logger logger = LoggerFactory.getLogger(SearchLocationServiceImpl.class);
+
+	@Autowired
+	private Environment env;
+
 	@Override
-	public List<Foursquare> getLocationDetailsByCategory(String category,String near) {
+	public List<Foursquare> getLocationDetailsByCategory(String near,String category) {
 		try {
-			// Construct data
-			String data = "client_id=C45ZSXXZDSTDVOEDRRNYGSY3T2QSFWE4PXQ2NEEZSSQTCOT0"
-					+ "&client_secret=RYUC1LMPGEONZ4ZYX45PRRVI1T40AYKIVORAIW3OZCG5UFLB"
-					+ "&v=20190425"
+			String data = "client_id="+env.getProperty("foursquare.client_id").trim()
+					+ "&client_secret="+env.getProperty("foursquare.client_secret").trim()
+					+ "&v="+env.getProperty("foursquare.verion").trim()
 					+ "&near="+near
 					+ "&intent=browse";
-			//		    System.out.println(data);
-
 			URL url = new URL("https://api.foursquare.com/v2/venues/search");
 			URLConnection conn = url.openConnection();
 			conn.setDoOutput(true);
@@ -38,12 +44,14 @@ public class SearchLocationServiceImpl implements SearchLocationService{
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
+			List<Foursquare> fsList = getLocationDetails(rd, category);
+
 			wr.close();
 			rd.close();
 
-			return getLocationDetails(rd, category);
+			return fsList;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		return null; 
 	}
@@ -60,7 +68,6 @@ public class SearchLocationServiceImpl implements SearchLocationService{
 			Foursquare fs = new Foursquare();
 			while ((readLineStr = rd.readLine()) != null) {
 				JSONObject responseObject = new JSONObject(readLineStr);
-				//		    	System.out.println("RESPONSE ::"+jsonObject);
 				if (responseObject.has("response")) {
 					if (responseObject.getJSONObject("response").has("venues")) {
 						JSONArray venuesArray = responseObject.getJSONObject("response").getJSONArray("venues");
@@ -103,7 +110,7 @@ public class SearchLocationServiceImpl implements SearchLocationService{
 										formattedAddStr += formattedAdd.get(jCount)+ ", ";
 								}
 							} 
-							fs.setFormattedAddress(formattedAddStr.substring(0,formattedAddStr.lastIndexOf(",") - 1) + ".");
+							fs.setFormattedAddress(formattedAddStr.substring(0,formattedAddStr.lastIndexOf(",")) + ".");
 
 							fsList.add(fs);
 						}
@@ -112,7 +119,7 @@ public class SearchLocationServiceImpl implements SearchLocationService{
 			}
 			return fsList;
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		return null;
 	}

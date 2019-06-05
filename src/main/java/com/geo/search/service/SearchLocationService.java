@@ -6,5 +6,5 @@ import com.geo.search.model.Foursquare;
 
 public interface SearchLocationService {
 
-	public List<Foursquare> getLocationDetailsByCategory(String category,String near);
+	public List<Foursquare> getLocationDetailsByCategory(String near,String category);
 }

@@ -1,4 +1,4 @@
-package com.geo.search.controller;
+package com.geo.search.service.impl;
 
 
 import static org.junit.Assert.assertEquals;
@@ -20,13 +20,11 @@ import com.geo.search.service.impl.SearchLocationServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SearchLocationControllerTest2 {
+public class SearchLocationServiceImplTest {
 
 	@MockBean
 	SearchLocationServiceImpl searchLocationService;
 	
-	@Autowired
-	SearchLocationController searchLocationController;
 	
 	@Test
 	public void test() {
@@ -38,9 +36,9 @@ public class SearchLocationControllerTest2 {
 			List<Foursquare> fList = new ArrayList<Foursquare>();
 			fList.add(f);
 				
-			when(searchLocationService.getLocationDetailsByCategory("Heliport", "Chicago,IL")).thenReturn(fList );
+			when(searchLocationService.getLocationDetailsByCategory("Chicago,IL","Heliport")).thenReturn(fList );
 			
-			assertEquals(fList, searchLocationService.getLocationDetailsByCategory("Heliport", "Chicago,IL"));
+			assertEquals(fList, searchLocationService.getLocationDetailsByCategory( "Chicago,IL","Heliport"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
